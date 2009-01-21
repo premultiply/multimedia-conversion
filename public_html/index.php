@@ -2,7 +2,7 @@
 
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application/'));
 set_include_path(
-   	realpath(dirname(__FILE__) . '/../library/') 
+   	realpath(dirname(__FILE__) . '/../library/') //sciezka do zend frameworka
     . PATH_SEPARATOR . 
     APPLICATION_PATH . '/models'
     . PATH_SEPARATOR .

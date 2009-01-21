@@ -3,6 +3,8 @@
 defined('APPLICATION_PATH')
     or define('APPLICATION_PATH', dirname(__FILE__));
 
+    
+//zmienic na "production" na serwerze produkcyjnym
 defined('APPLICATION_ENVIRONMENT')
     or define('APPLICATION_ENVIRONMENT', 'development');
 
