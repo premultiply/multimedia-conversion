@@ -25,16 +25,18 @@ class Converter {
 			}
 			$fps = $ffmpegObj->getFrameRate();
 			if ($formats->{$format}->{$quality}->pass->first && $formats->{$format}->{$quality}->pass->second) {
-				exec($ffmpegPath . " -i " . $filename . ' ' . $formats->{$format}->{$quality}->pass->first." -r ".$fps." -s ".$width . 'x' . $height . " -y ". $config->path->null);
-				exec($ffmpegPath . " -i " . $filename . ' ' . $formats->{$format}->{$quality}->pass->second." -r ".$fps." -s ".$width . 'x' . $height . ' ' . $destFile);
+				//exec($ffmpegPath . " -i " . $filename . ' ' . $formats->{$format}->{$quality}->pass->first." -r ".$fps." -s ".$width . 'x' . $height . " -y ". $config->path->null);
+				//exec($ffmpegPath . " -i " . $filename . ' ' . $formats->{$format}->{$quality}->pass->second." -r ".$fps." -s ".$width . 'x' . $height . ' ' . $destFile);
 			} elseif ($formats->{$format}->{$quality}->pass->first) {
 				exec($ffmpegPath . " -i " . $filename . ' ' . $formats->{$format}->{$quality}->pass->first." -r ".$fps." -s ".$width . 'x' . $height . ' ' . $destFile);
 			} else {
 				return 'error';
 			}
-			$convertedMovie = new ffmpeg_movie($destFile);
-			$frame = $convertedMovie->getFrame($this->_makeMultipleTwo($convertedMovie->getFrameCount()) / 2);
-			imagejpeg($frame->toGDImage(), $filename.'.jpg');
+			if ($formats->{$format}->thumbs) {
+				$convertedMovie = new ffmpeg_movie($destFile);
+				$frame = $convertedMovie->getFrame($this->_makeMultipleTwo($convertedMovie->getFrameCount()) / 2);
+				imagejpeg($frame->toGDImage(), $filename.'.jpg');
+			}
 		} elseif ($formats->{$format}->mediatype == 'audio') {
 			exec($ffmpegPath . " -i " . $filename . ' ' . $formats->{$format}->{$quality}->pass->first. ' ' . $destFile);
 		} else {
