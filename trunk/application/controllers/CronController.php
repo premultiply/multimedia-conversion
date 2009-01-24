@@ -45,8 +45,11 @@ class CronController extends Zend_Controller_Action {
 			$job->save();
 		}
 		
+		
+		// konwersja
 		foreach($jobs as $job) {
-			if ($converter->convert($config->path->files.$job->id.'/'.$job->filename, $job->format, $job->quality) == 'success'){
+			$result = $converter->convert($config->path->files.$job->id.'/'.$job->filename, $job->format, $job->quality);
+			if ($result == 'success'){
 				$job->converted = 'now';
 				$job->save();
 				if ($job->status_url) {
@@ -57,7 +60,7 @@ class CronController extends Zend_Controller_Action {
 				$job->deleted = 'now';
 				$job->save();
 				if ($job->status_url) {
-					$status->respond($job->status_url, 'ERROR');
+					$status->respond($job->status_url, $result);
 				}
 			}	
 		}
