@@ -22,7 +22,7 @@ class CronController extends Zend_Controller_Action {
 		));
 		
 		foreach($jobs as $job) {
-			$time = time() - strtotime($job->converted);
+			$time = time() - strtotime(preg_replace("/\..*/","",$job->converted));
 			$lifetime =  3600 * $config->file->lifetime;
 			if ($time > $lifetime) {
 				$this->_delete($config->path->files.$job->id);
