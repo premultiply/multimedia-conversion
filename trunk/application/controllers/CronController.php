@@ -27,6 +27,7 @@ class CronController extends Zend_Controller_Action {
 			if ($time > $lifetime) {
 				$this->_delete($config->path->files.$job->id);
 				$job->deleted = 'now';
+				$job->deletion_reason = 'outdated';
 				$job->save();
 			}
 		}
@@ -58,6 +59,7 @@ class CronController extends Zend_Controller_Action {
 			} else {
 				$this->_delete($config->path->files.$job->id);
 				$job->deleted = 'now';
+				$job->deletion_reason = $result;
 				$job->save();
 				if ($job->status_url) {
 					$status->respond($job->status_url, $result);
