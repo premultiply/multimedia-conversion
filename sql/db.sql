@@ -48,6 +48,7 @@ CREATE TABLE jobs (
     conversion_started timestamp without time zone,
     upload_started timestamp without time zone,
     deleted timestamp without time zone,
+    deletion_reason text,
     filename text,
     format text NOT NULL,
     quality text NOT NULL,

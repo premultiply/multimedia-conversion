@@ -17,7 +17,7 @@ class Converter {
 			if ($formats->{$format}->mediatype == 'video') {
 				$srcWidth = 0;
 				$srcHeight = 0;
-				$ffmpegObj = @new ffmpeg_movie($filename);  // zabezpieczenie przed zlymi plikami
+				$ffmpegObj = @new ffmpeg_movie('"'.$filename.'"');  // zabezpieczenie przed zlymi plikami
 				if ($ffmpegObj) {
 					$srcWidth = $this->_makeMultipleTwo($ffmpegObj->getFrameWidth());
 					$srcHeight = $this->_makeMultipleTwo($ffmpegObj->getFrameHeight());
@@ -34,9 +34,9 @@ class Converter {
 				$fps = $ffmpegObj->getFrameRate();
 				if ($formats->{$format}->{$quality}->pass->first && $formats->{$format}->{$quality}->pass->second) {
 					exec($ffmpegPath . " -i " . $filename . ' ' . $formats->{$format}->{$quality}->pass->first." -r ".$fps." -s ".$width . 'x' . $height . " -y ". $config->path->null);
-					exec($ffmpegPath . " -i " . $filename . ' ' . $formats->{$format}->{$quality}->pass->second." -r ".$fps." -s ".$width . 'x' . $height . ' ' . $destFile);
+					exec($ffmpegPath . " -i " . $filename . ' ' . $formats->{$format}->{$quality}->pass->second." -r ".$fps." -s ".$width . 'x' . $height . ' "'. $destFile .'"');
 				} elseif ($formats->{$format}->{$quality}->pass->first) {
-					exec($ffmpegPath . " -i " . $filename . ' ' . $formats->{$format}->{$quality}->pass->first." -r ".$fps." -s ".$width . 'x' . $height . ' ' . $destFile);
+					exec($ffmpegPath . " -i " . $filename . ' ' . $formats->{$format}->{$quality}->pass->first." -r ".$fps." -s ".$width . 'x' . $height . ' "'. $destFile .'"');
 				} else {
 					return 'Error: invalid format';
 				}
@@ -46,7 +46,7 @@ class Converter {
 					imagejpeg($frame->toGDImage(), $filename.'.jpg');
 				}
 			} elseif ($formats->{$format}->mediatype == 'audio') {
-				exec($ffmpegPath . " -i " . $filename . ' ' . $formats->{$format}->{$quality}->pass->first. ' ' . $destFile);
+				exec($ffmpegPath . " -i " . $filename . ' ' . $formats->{$format}->{$quality}->pass->first. ' "'. $destFile .'"');
 			} else {
 				return 'Error: invalid mediatype';
 			}
