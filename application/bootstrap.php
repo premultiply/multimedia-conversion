@@ -6,7 +6,7 @@ defined('APPLICATION_PATH')
     
 //zmienic na "production" na serwerze produkcyjnym
 defined('APPLICATION_ENVIRONMENT')
-    or define('APPLICATION_ENVIRONMENT', 'development');
+    or define('APPLICATION_ENVIRONMENT', 'production');
 
 $frontController = Zend_Controller_Front::getInstance();
 $frontController->setControllerDirectory(APPLICATION_PATH . '/controllers');
