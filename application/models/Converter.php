@@ -33,9 +33,9 @@ class Converter {
 				}
 				$fps = $ffmpegObj->getFrameRate();
 				if ($formats->{$format}->{$quality}->pass->first && $formats->{$format}->{$quality}->pass->second) {
-					exec('cd ' . dirname($filename) . " && " . $ffmpegPath . " -i \"" . $filename . ' " ' . $formats->{$format}->{$quality}->pass->first." -r ".$fps." -s ".$width . 'x' . $height . " -y ". $config->path->null . " && " . $ffmpegPath . " -i \"" . $filename . ' " ' . $formats->{$format}->{$quality}->pass->second." -r ".$fps." -s ".$width . 'x' . $height . ' "'. $destFile .'"');
+					exec('cd ' . dirname($filename) . " && " . $ffmpegPath . " -i \"" . $filename . '" ' . $formats->{$format}->{$quality}->pass->first." -r ".$fps." -s ".$width . 'x' . $height . " -y ". $config->path->null . " && " . $ffmpegPath . " -i \"" . $filename . ' " ' . $formats->{$format}->{$quality}->pass->second." -r ".$fps." -s ".$width . 'x' . $height . ' "'. $destFile .'"');
 				} elseif ($formats->{$format}->{$quality}->pass->first) {
-					exec($ffmpegPath . " -i \"" . $filename . ' " ' . $formats->{$format}->{$quality}->pass->first." -r ".$fps." -s ".$width . 'x' . $height . ' "'. $destFile .'"');
+					exec($ffmpegPath . " -i \"" . $filename . '" ' . $formats->{$format}->{$quality}->pass->first." -r ".$fps." -s ".$width . 'x' . $height . ' "'. $destFile .'"');
 				} else {
 					return 'Error: invalid format';
 				}
@@ -45,7 +45,7 @@ class Converter {
 					imagejpeg($frame->toGDImage(), '"'.$filename.'.jpg"');
 				}
 			} elseif ($formats->{$format}->mediatype == 'audio') {
-				exec($ffmpegPath . " -i \"" . $filename . ' " ' . $formats->{$format}->{$quality}->pass->first. ' "'. $destFile .'"');
+				exec($ffmpegPath . " -i \"" . $filename . '" ' . $formats->{$format}->{$quality}->pass->first. ' "'. $destFile .'"');
 			} else {
 				return 'Error: invalid mediatype';
 			}
