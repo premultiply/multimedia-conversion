@@ -102,10 +102,15 @@ class Rest {
 		$jobs = new Jobs();
 		$job = $jobs->fetchRow(array('id = ?' => $jobId));
 		if ($job->converted && $job->uploaded){
+			if (file_exists($config->path->files.$jobId.'/'.$job->filename.'.'.$job->quality.'.'.$job->format)) {
+				$filepath = $config->path->files.$jobId.'/'.$job->filename.'.'.$job->quality.'.'.$job->format;
+			} elseif (file_exists($config->path->files.$jobId.'/'.$job->filename.'_remixed.'.$job->quality.'.'.$job->format)) {
+				$filepath = $config->path->files.$jobId.'/'.$job->filename.'_remixed.'.$job->quality.'.'.$job->format;
+			}
 			http_send_content_disposition($job->filename.".".$formats->{$job->format}->extension, true);
 			http_send_content_type("binary/octet-stream");	
 			http_throttle(0.1, $config->http->throttle);
-			http_send_file($config->path->files.$jobId.'/'.$job->filename.'.'.$job->quality.'.'.$job->format);
+			http_send_file($filepath);
 			$job->downloaded = 'now';
 			$job->save();
 		} else {
@@ -124,11 +129,16 @@ class Rest {
 		$formats = $registry->formats;
 		$jobs = new Jobs();
 		$job = $jobs->fetchRow(array('id = ?' => $jobId));
+		if (file_exists($config->path->files.$jobId.'/'.$job->filename.'.jpg')) {
+			$filepath = $config->path->files.$jobId.'/'.$job->filename.'.jpg';
+		} elseif (file_exists($config->path->files.$jobId.'/'.$job->filename.'_remixed.jpg')) {
+			$filepath = $config->path->files.$jobId.'/'.$job->filename.'_remixed.jpg';
+		}
 		if ($job->converted && $job->uploaded){
 			http_send_content_disposition($job->filename.".jpg");
 			http_send_content_type("binary/octet-stream");	
 			http_throttle(0.1, $config->http->throttle);
-			http_send_file($config->path->files.$jobId.'/'.$job->filename.".jpg");
+			http_send_file($filepath);
 		} else {
 			$xml ='<?xml version="1.0" encoding="UTF-8"?>
 			<error>Sorry, this file can\'t be downloaded</error>';
@@ -151,5 +161,15 @@ class Rest {
 			$filename = substr($filename, 0, -strlen($ext));
 		}
 		return $filename;
+	}
+	
+	public function test() {
+		$xml ='<?xml version="1.0" encoding="UTF-8"?>
+				<remix>
+					<movie url="URL1" start="sec1" end="sec3" />
+					<movie url="URL2" start="sec2" end="sec4" />
+				</remix>';
+   		$xml = simplexml_load_string($xml);
+		return $xml;
 	}
 }

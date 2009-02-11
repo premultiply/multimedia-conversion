@@ -42,7 +42,7 @@ class Converter {
 				if ($formats->{$format}->thumbs) {
 					$convertedMovie = new ffmpeg_movie($destFile);
 					$frame = $convertedMovie->getFrame($this->_makeMultipleTwo($convertedMovie->getFrameCount()) / 2);
-					imagejpeg($frame->toGDImage(), '"'.$filename.'.jpg"');
+					imagejpeg($frame->toGDImage(), $filename.'.jpg');
 				}
 			} elseif ($formats->{$format}->mediatype == 'audio') {
 				exec($ffmpegPath . " -i \"" . $filename . '" ' . $formats->{$format}->{$quality}->pass->first. ' "'. $destFile .'"');
@@ -60,6 +60,43 @@ class Converter {
 			}
 		} else {
 			return 'Error: file does not exist in filesystem.';
+		}
+	}
+	
+	public function remix($xml, $filename, $format, $quality) {
+		if (is_object($xml->movie[0]->attributes())) {
+			$i = 0;
+			$path = dirname($filename) . '/';
+			foreach ($xml->movie as $movie) {
+				if (isset($movie->attributes()->url)) {
+					$file_temp = 'temp' . $i;
+					copy($movie->attributes()->url, $path.$file_temp);
+					$time = '';
+					$start = 0;
+					if (isset($movie->attributes()->start)) {
+						$start = $movie->attributes()->start;
+						$time .= ' -ss ' . $start;
+						
+					}
+					if (isset($movie->attributes()->end)) {
+						$end = $movie->attributes()->end - $start;
+						$time .= ' -t ' . $end;
+					}
+					exec('ffmpeg -i "' . $path . $file_temp . '"' . $time .' -sameq -y "' . $path . $file_temp . '.mpg"');
+					if ($i == 0) {
+						rename($path . 'temp' . $i . '.mpg', $path . basename($filename) . "_remixed");
+					} else {
+						copy($path . basename($filename) . '_remixed', $path . 'temp_remixed');
+						exec('cat "' . $path . 'temp_remixed" "' . $path . 'temp' . $i . '.mpg" > "' .$path . basename($filename) . '_remixed"');
+						unlink($path . 'temp_remixed');
+					}
+					$i++;
+				}
+			}
+			$result = $this->convert($path . basename($filename) . "_remixed", $format, $quality);
+			return $result;
+		} else {
+			return 'Error: invalid XML';
 		}
 	}
 	

@@ -49,7 +49,13 @@ class CronController extends Zend_Controller_Action {
 		
 		// konwersja
 		foreach($jobs as $job) {
-			$result = $converter->convert($config->path->files.$job->id.'/'.$job->filename, $job->format, $job->quality);
+			$filename = $config->path->files.$job->id . '/' . $job->filename;
+			@$xml = simplexml_load_file($filename);
+			if (is_object($xml)) {
+				$result = $converter->remix($xml, $filename, $job->format, $job->quality);
+			} else {
+				$result = $converter->convert($filename, $job->format, $job->quality);
+			}
 			if ($result == 'success'){
 				$job->converted = 'now';
 				$job->save();
