@@ -41,8 +41,8 @@ class Rest {
 					$filename = $this->_stripExt($upload->getFileName(null, false));
 					$filenameFull = $upload->getFileName();
 					$filenameFullStr = $this->_stripExt($filenameFull);
-					if ($filenameFull == $filenameFullStr) {
-						rename($upload->getFileName(), $this->_stripExt($upload->getFileName()));
+					if ($filenameFull != $filenameFullStr) {
+						rename($filenameFull, $filenameFullStr);
 					}
 					$uploaded = true;
 				}
