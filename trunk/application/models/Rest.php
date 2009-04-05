@@ -167,13 +167,15 @@ class Rest {
 		return $filename;
 	}
 	
-	public function test() {
-		$xml ='<?xml version="1.0" encoding="UTF-8"?>
-				<remix>
-					<movie url="URL1" start="sec1" end="sec3" />
-					<movie url="URL2" start="sec2" end="sec4" />
-				</remix>';
-   		$xml = simplexml_load_string($xml);
-		return $xml;
-	}
+	/*public function test() {
+		$xml = simplexml_load_file("http://file/test.westley");
+		echo '<pre>';
+		foreach ($xml->producer as $producer) {
+			foreach ($producer->property as $property) {
+				if ($property->attributes()->name == "resource") echo $producer->attributes()->id .': ' . $property . "\n";
+			}
+		}
+		echo '</pre>';
+		//return $xml;
+	}*/
 }
