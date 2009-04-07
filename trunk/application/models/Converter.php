@@ -37,13 +37,15 @@ class Converter {
 				if ($formats->{$format}->{$quality}->pass->first->ffmpeg && $formats->{$format}->{$quality}->pass->second->ffmpeg) {
 					exec('cd ' . dirname($filename) . ' && ' . $ffmpegPath . ' -i "' . $filename . '" ' . $formats->{$format}->{$quality}->pass->first->ffmpeg.' -r '.$fps." -s ".$width . 'x' . $height . " -y ". $config->path->null . ' && ' . $ffmpegPath . ' -i "' . $filename . '" ' . $formats->{$format}->{$quality}->pass->second->ffmpeg.' -r '.$fps.' -s '.$width . 'x' . $height . ' "'. $destFile .'"');
 				} elseif ($formats->{$format}->{$quality}->pass->first->ffmpeg) {
-					exec($ffmpegPath . ' -i "' . $filename . '" ' . $formats->{$format}->{$quality}->pass->first.ffmpeg.' -r '.$fps.' -s '.$width . 'x' . $height . ' "'. $destFile .'"');
+					exec($ffmpegPath . ' -i "' . $filename . '" ' . $formats->{$format}->{$quality}->pass->first->ffmpeg.' -r '.$fps.' -s '.$width . 'x' . $height . ' "'. $destFile .'"');
 				} else {
 					return 'Error: invalid format';
 				}
 				if ($formats->{$format}->thumbs) {
 					$convertedMovie = new ffmpeg_movie($destFile);
-					$frame = $convertedMovie->getFrame($this->_makeMultipleTwo($convertedMovie->getFrameCount()) / 2);
+					$frameNo = $this->_makeMultipleTwo($convertedMovie->getFrameCount()) / 2;
+					$frameNo = $frameNo > 0 ? $frameNo : 1;
+					$frame = $convertedMovie->getFrame($frameNo);
 					imagejpeg($frame->toGDImage(), $filename.'.jpg');
 				}
 			} elseif ($formats->{$format}->mediatype == 'audio') {
