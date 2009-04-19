@@ -1,0 +1,35 @@
+#summary One-sentence summary of this page.
+
+=What do you need?=
+
+In order MC to work properly you need following applications installed in your Linux/Unix system:
+
+  * *ffmpeg* - http://www.ffmpeg.org
+  * *sox* - http://sox.sourceforge.net
+  * *MLT* - http://www.mltframework.org
+  * *ffmpeg-php* - http://ffmpeg-php.sourceforge.net
+
+=Recommended versions=
+
+MC has been tested and confirmed to work with following versions of applications mentioned above:
+
+  * ffmpeg - SVN-r16849
+  * MLT - 0.3.6
+  * sox - 14.2.0
+  * ffmpeg-php - 0.6.1
+
+However, you don't have to use exactly the same versions. MC itself doesn't use any version-specific features of those applications. The purpose is to make them working together on your machine and those versions worked for me on Ubuntu 8.10 and Debian Lenny.
+
+==A word on compiling ffmpeg, sox and MLT==
+
+The spectrum of supported formats and codecs depends mainly on options used when configuring ffmpeg, sox and MLT. For example, my configuration options for ffmpeg were:
+
+{{{
+--enable-gpl --enable-postproc --enable-pthreads --enable-libfaac --enable-libfaad --enable-libmp3lame --enable-libtheora --enable-libx264 --enable-libxvid --enable-libamr-nb --enable-libamr-wb --enable-libamr-wb --enable-shared --enable-nonfree --enable-libvorbis --enable-libgsm --enable-swscale
+}}}
+
+For further informations about configuring and building ffmpeg, sox and MLT please visit their websites. (links at the top of this page).
+
+===Warning===
+
+What's important, when compiling MLT you can make use of ffmpeg codecs already installed in your system, or compile them independently with MLT, which may cause a situation when your ffmpeg supports some formats that your MLT doesn't support and vice versa.
