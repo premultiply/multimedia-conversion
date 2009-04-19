@@ -1,5 +1,21 @@
-#summary One-sentence summary of this page.
+#summary Introduction to MC.
 
 = Introduction =
 
 [http://en.jakubiak.info/2009/02/14/multimedia-conversion-server.html Introduction by Antoni Jakubiak]
+
+=What's MC?=
+
+MultimediaConversion is an application (written in PHP and published under GNU GPL v3 license) that allows its users to get their audio and video files manipulated by remote server with it installed.
+
+=What can I use it for?=
+
+Basically, if you need your multimedia files to be converted, cut, joined or mixed you can use MC to do that.
+
+=What are advantages of MC?=
+
+  * it's free
+  * it's simple
+  * it's easy to add custom output formats
+  * you can install it once on one machine and it can serve all your websites
+  * since it uses [http://www.mltframework.org MLT] it's really powerful for advanced usage while still allowing simple format-to-format conversion without unnecessary complications
