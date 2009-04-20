@@ -4,6 +4,7 @@
 
 In order MC to work properly you need following applications installed in your Linux/Unix system:
 
+  *  *Zend Framework* - http://framework.zend.com/
   * *ffmpeg* - http://www.ffmpeg.org
   * *sox* - http://sox.sourceforge.net
   * *MLT* - http://www.mltframework.org
