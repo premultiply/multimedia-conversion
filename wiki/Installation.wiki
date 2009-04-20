@@ -11,6 +11,12 @@ In order MC to work properly you need following applications installed in your L
   * *pecl_http php extension* - http://pecl.php.net/package/pecl_http
   * *GD pgp extension* - http://www.libgd.org/
 
+=Server configuration=
+
+  * php scripts maximum execution time respectively long (converting takes its time)
+  * respectively high size limit of files uploaded using POST (if you'll use that method)
+  * "public_html" should be root directory
+
 =Recommended versions=
 
 MC has been tested and confirmed to work with following versions of applications mentioned above:
