@@ -9,8 +9,10 @@
 
 MultimediaConversion is an application (written in PHP and published under GNU GPL v3 license) that allows its users to get their audio and video files manipulated by remote server with it installed.
 
-=What it makes use of?=
+=What does it make use of?=
 
+  * *PHP* - http://www.php.net
+  * *PostgreSQL* - http://www.postgresql.org/
   * *Zend Framework* - http://framework.zend.com/
   * *ffmpeg* - http://www.ffmpeg.org
   * *sox* - http://sox.sourceforge.net
