@@ -1,0 +1,61 @@
+#summary Output formats supported by MC
+
+= Predefined output formats and qualities =
+
+==Video==
+
+===flv===
+
+  * normal
+    * video bitrate: 400 kbps
+    * video framerate: depends on input file when just converting or 25 when making use of MLT
+    * video width: 320 px
+    * video height: calculated dynamically or 180 px
+    * video codec: flv
+    * audio bitrate: 64 kbps
+    * audio sample rate: 22050 Hz
+    * number of audio channels: 1
+    * audio codec: libmp3lame
+    * thumbnails available: yes
+    * number of passes: 1
+
+===h264===
+
+  * normal
+    * video bitrate: 800 kbps
+    * video framerate: depends on input file when just converting or 25 when making use of MLT
+    * video width: 640 px
+    * video height: calculated dynamically or 360 px
+    * video codec: libx264
+    * audio bitrate: 128 kbps
+    * audio sample rate: depending on input file
+    * number of audio channels: 2
+    * audio codec: libfaac
+    * thumbnails available: no
+    * number of passes: 2
+
+
+===3gp===
+
+  * normal
+    * video bitrate: 200 kbps
+    * video framerate: depends on input file when just converting or 25 when making use of MLT
+    * video width: 176 px
+    * video height: 144 px
+    * video codec: h263
+    * audio bitrate: 32 kbps
+    * audio sample rate: 8000 Hz
+    * number of audio channels: 1
+    * audio codec: libfaac
+    * thumbnails available: yes
+    * number of passes: 1
+
+==Audio==
+
+===mp3===
+
+  * normal
+    * audio bitrate: 192 kbps
+    * audio sample rate: 22050 Hz
+    * number of audio channels: 2
+    * audio codec: libmp3lame
