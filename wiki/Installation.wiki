@@ -9,7 +9,7 @@ In order MC to work properly you need following applications installed in your L
   * *MLT* - http://www.mltframework.org
   * *ffmpeg-php php extension* - http://ffmpeg-php.sourceforge.net
   * *pecl_http php extension* - http://pecl.php.net/package/pecl_http
-  * *GD pgp extension* - http://www.libgd.org/
+  * *GD php extension* - http://www.libgd.org/
 
 =Server configuration=
 
