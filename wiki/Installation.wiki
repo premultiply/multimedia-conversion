@@ -7,7 +7,9 @@ In order MC to work properly you need following applications installed in your L
   * *ffmpeg* - http://www.ffmpeg.org
   * *sox* - http://sox.sourceforge.net
   * *MLT* - http://www.mltframework.org
-  * *ffmpeg-php* - http://ffmpeg-php.sourceforge.net
+  * *ffmpeg-php php extension* - http://ffmpeg-php.sourceforge.net
+  * *pecl_http php extension* - http://pecl.php.net/package/pecl_http
+  * *GD pgp extension* - http://www.libgd.org/
 
 =Recommended versions=
 
@@ -17,6 +19,8 @@ MC has been tested and confirmed to work with following versions of applications
   * MLT - 0.3.6
   * sox - 14.2.0
   * ffmpeg-php - 0.6.1
+  * GD - 2.0 or higher
+  * http - 1.6.3
 
 However, you don't have to use exactly the same versions. MC itself doesn't use any version-specific features of those applications. The purpose is to make them working together on your machine and those versions worked for me on Ubuntu 8.10 and Debian Lenny.
 
