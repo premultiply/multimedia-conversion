@@ -1,4 +1,5 @@
 #summary Installation tips.
+#labels installation,help
 
 =What do you need?=
 
