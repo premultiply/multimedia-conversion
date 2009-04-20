@@ -1,4 +1,5 @@
 #summary Advanced usage of MC.
+#labels westley,mlt,xml,advanced,usage
 
 =Introduction=
 
