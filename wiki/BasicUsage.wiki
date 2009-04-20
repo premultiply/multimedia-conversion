@@ -1,0 +1,44 @@
+#summary MC basics.
+
+=Upload requests parameters=
+
+Uploading is possible using *GET* or *POST*.
+
+==Mandatory==
+
+  * format - format the file is supposed to be converted to
+  * url - url of a file you want server to download (only needed when request type is GET)
+  * method = upload (only needed when request type is GET)
+
+==Optional==
+
+  * quality - quality of the output file ("normal" by default)
+  * statusUrl - URL that status of conversion should be sent to
+
+===The upload request returns following XML===
+{{{<jobId>xxxx</jobID>}}}
+
+=Inne zapytania=
+
+Zapytanie *GET*
+
+==parametry==
+
+  * method
+  * jobId  
+  
+
+===sprawdzanie statusu===
+
+  * method = check
+  * jobId = jobId otrzyame przy uploadzie
+
+
+===download miniaturki===
+
+  * method = thumb
+  * jobId = jobId otrzyame przy uploadzie
+
+===download===
+  * method = get
+  * jobId = jobId otrzyame przy uploadzie
