@@ -1,4 +1,5 @@
 #summary Output formats supported by MC
+#labels output,formats,defining,defaults
 
 = Predefined output formats and qualities =
 
