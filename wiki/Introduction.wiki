@@ -10,6 +10,7 @@ MultimediaConversion is an application (written in PHP and published under GNU G
 
 =What it makes use of?=
 
+  * *Zend Framework* - http://framework.zend.com/
   * *ffmpeg* - http://www.ffmpeg.org
   * *sox* - http://sox.sourceforge.net
   * *MLT* - http://www.mltframework.org
