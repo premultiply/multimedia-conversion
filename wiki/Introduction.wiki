@@ -8,6 +8,15 @@
 
 MultimediaConversion is an application (written in PHP and published under GNU GPL v3 license) that allows its users to get their audio and video files manipulated by remote server with it installed.
 
+=What it makes use of?=
+
+  * *ffmpeg* - http://www.ffmpeg.org
+  * *sox* - http://sox.sourceforge.net
+  * *MLT* - http://www.mltframework.org
+  * *ffmpeg-php php extension* - http://ffmpeg-php.sourceforge.net
+  * *pecl_http php extension* - http://pecl.php.net/package/pecl_http
+  * *GD php extension* - http://www.libgd.org/
+
 =What can I use it for?=
 
 Basically, if you need your multimedia files to be converted, cut, joined or mixed you can use MC to do that.
