@@ -1,4 +1,5 @@
 #summary MC basics.
+#labels basics,basic,usage,help
 
 =Upload requests parameters=
 
