@@ -4,13 +4,17 @@
 
 In order MC to work properly you need following applications installed in your Linux/Unix system:
 
-  *  *Zend Framework* - http://framework.zend.com/
+  * *Zend Framework* - http://framework.zend.com/
   * *ffmpeg* - http://www.ffmpeg.org
   * *sox* - http://sox.sourceforge.net
   * *MLT* - http://www.mltframework.org
   * *ffmpeg-php php extension* - http://ffmpeg-php.sourceforge.net
   * *pecl_http php extension* - http://pecl.php.net/package/pecl_http
   * *GD php extension* - http://www.libgd.org/
+
+=Zend Framework files placement=
+
+Extract contents of "ZendFramework-<version.number>/library/" directory from your Zend Framework package into "library".
 
 =Server configuration=
 
@@ -22,6 +26,7 @@ In order MC to work properly you need following applications installed in your L
 
 MC has been tested and confirmed to work with following versions of applications mentioned above:
 
+  * Zend Framework - 1.7.2
   * ffmpeg - SVN-r16849
   * MLT - 0.3.6
   * sox - 14.2.0
