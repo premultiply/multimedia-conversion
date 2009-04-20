@@ -16,29 +16,57 @@ Uploading is possible using *GET* or *POST*.
   * statusUrl - URL that status of conversion should be sent to
 
 ===The upload request returns following XML===
-{{{<jobId>xxxx</jobID>}}}
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<jobId>[42-characters-long, unique JobID (small and capital letters, numbers)]</jobID>
+}}}
 
-=Inne zapytania=
+or 
 
-Zapytanie *GET*
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<error>Sorry, this media format or quality are not supported</error>
+}}}
 
-==parametry==
+or
 
-  * method
-  * jobId  
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<error>Sorry, you have to specify URL of the file you want to upload</error>
+}}}
+
+or
+
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<error>An error occured when uploading a file</error>
+}}}
+
+=Other available requests=
+
+Request type: *GET*
   
+==Checking state==
 
-===sprawdzanie statusu===
+===Parameters===
 
   * method = check
-  * jobId = jobId otrzyame przy uploadzie
+  * jobId = <JobID received after uploading your file>
 
+===Returns XML===
 
-===download miniaturki===
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<state>[uploaded | converted | deleted | error]</state>
+}}}
+
+===Thumbnail download (if available)===
 
   * method = thumb
-  * jobId = jobId otrzyame przy uploadzie
+  * jobId = <JobID received after uploading your file>
 
-===download===
+===Download===
+
+
   * method = get
-  * jobId = jobId otrzyame przy uploadzie
+  * jobId = <JobID received after uploading your file>
