@@ -120,11 +120,12 @@ class Converter {
 		}
 		elseif ($formats->{$format}->{$quality}->pass->first->mlt) {
 			exec('cd ' . $path . ' && inigo "' . $filename . '.westley" -consumer avformat:"' . $filename . '.' . $quality . '.' . $format .'" ' . $formats->{$format}->{$quality}->pass->first->mlt);
+			echo('cd ' . $path . ' && inigo "' . $filename . '.westley" -consumer avformat:"' . $filename . '.' . $quality . '.' . $format .'" ' . $formats->{$format}->{$quality}->pass->first->mlt);
 		}
-		if (file_exists($path . $filename . '.' . $quality . '.' . $format) && filesize($path . $filename . '.' . $quality . '.' . $format) > 0)
+		if (file_exists($filename . '.' . $quality . '.' . $format) && filesize($filename . '.' . $quality . '.' . $format) > 0)
 			return 'success';
 		else 
-			return 'Error: unable to convert this file';
+			return 'Error: unable to convert this file 2';
 	}
 	private function _getParameters($filename) {
 		
