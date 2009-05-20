@@ -48,6 +48,9 @@ class Converter {
 					$frame = $convertedMovie->getFrame($frameNo);
 					imagejpeg($frame->toGDImage(), $filename.'.jpg');
 				}
+				if ($format == 'h264') {
+					$this->_makeStreamable($destFile);
+				}
 			} elseif ($formats->{$format}->mediatype == 'audio') {
 				exec($ffmpegPath . " -i \"" . $filename . '" ' . $formats->{$format}->{$quality}->pass->first->ffmpeg. ' "'. $destFile .'"');
 			} else {
@@ -121,6 +124,9 @@ class Converter {
 		elseif ($formats->{$format}->{$quality}->pass->first->mlt) {
 			exec('cd ' . $path . ' && inigo "' . $filename . '.westley" -consumer avformat:"' . $filename . '.' . $quality . '.' . $format .'" ' . $formats->{$format}->{$quality}->pass->first->mlt);
 		}
+		if ($format == 'h264') {
+			$this->_makeStreamable($filename . '.' . $quality . '.' . $format);
+		}
 		if (file_exists($filename . '.' . $quality . '.' . $format) && filesize($filename . '.' . $quality . '.' . $format) > 0)
 			return 'success';
 		else 
@@ -164,6 +170,14 @@ class Converter {
 					$property->addAttribute('out', round(($property->attributes()->len + $start) * 0.025));
 				}
 			}
+			if ($property->attributes()->stop) {
+				$stop = $property->attributes()->stop;
+				if ($property->attributes()->out) {
+					$property->attributes()->out = round($stop * 0.025);
+				} else {
+					$property->addAttribute('out', round($stop * 0.025));
+				}
+			}
 			if ($property->attributes()-> name == "resource" && Zend_Uri::check($property)) {
 				copy($property, $path."resource".$this->i);
 				$property[0] = "resource".$this->i;
@@ -177,6 +191,15 @@ class Converter {
 		}
 		$this->d = $this->d - 1;
 		return $xml;
-	}	
+	}
+
+	private function _makeStreamable($filename) {
+		$registry = Zend_Registry::getInstance();
+		$config = $registry->configuration;
+		exec('qtf "' . $filename . '" "' . $filename . '.qtf"');
+		echo('qtf "' . $filename . '" "' . $filename . '.qtf"');
+		//unlink($filename);
+		//rename($filename . '.qtf', $filename);
+	}
 	
 }
