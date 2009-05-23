@@ -1,6 +1,16 @@
 #summary MC basics.
 #labels basics,basic,usage,help
 
+=Cron=
+
+In order to start converting uploaded media you need to run Cron controller, which is done by accessing <url to mc>/cron. It's recommended to add proper line to your crontab in order Cron controler to be executed every minute. This line should look like this:
+
+{{{
+* * * * *       lynx -mime_header "http://yourmcserver.com/cron" >> /var/log/mccron
+}}}
+
+Output of Cron controller (if any) will be saved to /var/log/mccron.
+
 =Upload requests parameters=
 
 Uploading is possible using *GET* or *POST*.
