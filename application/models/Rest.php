@@ -117,6 +117,7 @@ class Rest {
 			http_send_file($filepath);
 			$job->downloaded = 'now';
 			$job->save();
+			return;
 		} else {
 			$xml ='<?xml version="1.0" encoding="UTF-8"?>
 			<error>Sorry, this file can\'t be downloaded</error>';
@@ -143,6 +144,7 @@ class Rest {
 			http_send_content_type("binary/octet-stream");	
 			http_throttle(0.1, $config->http->throttle);
 			http_send_file($filepath);
+			return;
 		} else {
 			$xml ='<?xml version="1.0" encoding="UTF-8"?>
 			<error>Sorry, this file can\'t be downloaded</error>';
