@@ -48,9 +48,9 @@ class Converter {
 					$frame = $convertedMovie->getFrame($frameNo);
 					imagejpeg($frame->toGDImage(), $filename.'.jpg');
 				}
-				if ($format == 'h264') {
+				/*if ($format == 'h264') {
 					$this->_makeStreamable($destFile);
-				}
+				}*/
 			} elseif ($formats->{$format}->mediatype == 'audio') {
 				exec($ffmpegPath . " -i \"" . $filename . '" ' . $formats->{$format}->{$quality}->pass->first->ffmpeg. ' "'. $destFile .'"');
 			} else {
@@ -124,9 +124,16 @@ class Converter {
 		elseif ($formats->{$format}->{$quality}->pass->first->mlt) {
 			exec('cd ' . $path . ' && inigo "' . $filename . '.westley" -consumer avformat:"' . $filename . '.' . $quality . '.' . $format .'" ' . $formats->{$format}->{$quality}->pass->first->mlt);
 		}
-		if ($format == 'h264') {
-			$this->_makeStreamable($filename . '.' . $quality . '.' . $format);
+		if ($formats->{$format}->thumbs) {
+			$convertedMovie = new ffmpeg_movie($filename . '.' . $quality . '.' . $format);
+			$frameNo = $this->_makeMultipleTwo($convertedMovie->getFrameCount()) / 2;
+			$frameNo = $frameNo > 0 ? $frameNo : 1;
+			$frame = $convertedMovie->getFrame($frameNo);
+			imagejpeg($frame->toGDImage(), $filename.'.jpg');
 		}
+		/*if ($format == 'h264') {
+			$this->_makeStreamable($filename . '.' . $quality . '.' . $format);
+		}*/
 		if (file_exists($filename . '.' . $quality . '.' . $format) && filesize($filename . '.' . $quality . '.' . $format) > 0)
 			return 'success';
 		else 
@@ -193,13 +200,13 @@ class Converter {
 		return $xml;
 	}
 
-	private function _makeStreamable($filename) {
+	/*private function _makeStreamable($filename) {
 		$registry = Zend_Registry::getInstance();
 		$config = $registry->configuration;
 		exec('qtf "' . $filename . '" "' . $filename . '.qtf"');
 		echo('qtf "' . $filename . '" "' . $filename . '.qtf"');
 		//unlink($filename);
 		//rename($filename . '.qtf', $filename);
-	}
+	} */
 	
 }
