@@ -51,6 +51,9 @@ class Converter {
 				/*if ($format == 'h264') {
 					$this->_makeStreamable($destFile);
 				}*/
+				if ($format == 'flv') {
+					exec('flvtool2 -UP "'. $destFile .'"');
+				}
 			} elseif ($formats->{$format}->mediatype == 'audio') {
 				exec($ffmpegPath . " -i \"" . $filename . '" ' . $formats->{$format}->{$quality}->pass->first->ffmpeg. ' "'. $destFile .'"');
 			} else {
@@ -124,25 +127,29 @@ class Converter {
 		elseif ($formats->{$format}->{$quality}->pass->first->mlt) {
 			exec('cd ' . $path . ' && inigo "' . $filename . '.westley" -consumer avformat:"' . $filename . '.' . $quality . '.' . $format .'" ' . $formats->{$format}->{$quality}->pass->first->mlt);
 		}
-		if ($formats->{$format}->thumbs) {
+		/*if ($formats->{$format}->thumbs) {
 			$convertedMovie = new ffmpeg_movie($filename . '.' . $quality . '.' . $format);
 			$frameNo = $this->_makeMultipleTwo($convertedMovie->getFrameCount()) / 2;
 			$frameNo = $frameNo > 0 ? $frameNo : 1;
 			$frame = $convertedMovie->getFrame($frameNo);
 			imagejpeg($frame->toGDImage(), $filename.'.jpg');
-		}
+		}*/
 		/*if ($format == 'h264') {
 			$this->_makeStreamable($filename . '.' . $quality . '.' . $format);
 		}*/
+		if ($format == 'flv') {
+			exec('flvtool2 -UP "' . $filename . '.' . $quality . '.' . $format . '"');
+		}
 		if (file_exists($filename . '.' . $quality . '.' . $format) && filesize($filename . '.' . $quality . '.' . $format) > 0)
 			return 'success';
 		else 
 			return 'Error: unable to convert this file 2';
 	}
+	/*
 	private function _getParameters($filename) {
 		
 	}
-	
+	*/
 	//zamiana liczby na parzysta (potrzebne dla ffmpeg)
 	private function _makeMultipleTwo($value) {
 		if($value % 2 == 0) {
