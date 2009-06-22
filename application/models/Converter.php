@@ -116,16 +116,17 @@ class Converter {
 		$registry = Zend_Registry::getInstance();
 		$config = $registry->configuration;
 		$formats = $registry->formats;
+		$inigoPath = $config->path->inigo;
 		$xml = $this->_convertXML($xml, $path, $config->xml->depth);
 		/*echo "<pre>";
 		print_r($xml);			//przydatne przy rozwiazywaniu problemow
 		echo "</pre>";*/
 		file_put_contents($filename . '.westley', $xml->asXML());
 		if ($formats->{$format}->{$quality}->pass->second->mlt) {
-			exec('cd ' . $path . ' && inigo "' . $filename . '.westley" -consumer avformat:"' . $filename . '.' . $quality . '.' . $format .'" ' . $formats->{$format}->{$quality}->pass->first->mlt . ' && inigo "' . $filename . '.westley" -consumer avformat:"' . $filename . '.' . $quality . '.' . $format .'" ' . $formats->{$format}->{$quality}->pass->second->mlt);
+			exec('cd ' . $path . ' && ' . $inigoPath . ' "' . $filename . '.westley" -consumer avformat:"' . $filename . '.' . $quality . '.' . $format .'" ' . $formats->{$format}->{$quality}->pass->first->mlt . ' && ' . $inigoPath . ' "' . $filename . '.westley" -consumer avformat:"' . $filename . '.' . $quality . '.' . $format .'" ' . $formats->{$format}->{$quality}->pass->second->mlt);
 		}
 		elseif ($formats->{$format}->{$quality}->pass->first->mlt) {
-			exec('cd ' . $path . ' && inigo "' . $filename . '.westley" -consumer avformat:"' . $filename . '.' . $quality . '.' . $format .'" ' . $formats->{$format}->{$quality}->pass->first->mlt);
+			exec('cd ' . $path . ' && ' . $inigoPath . ' "' . $filename . '.westley" -consumer avformat:"' . $filename . '.' . $quality . '.' . $format .'" ' . $formats->{$format}->{$quality}->pass->first->mlt);
 		}
 		/*if ($formats->{$format}->thumbs) {
 			$convertedMovie = new ffmpeg_movie($filename . '.' . $quality . '.' . $format);
