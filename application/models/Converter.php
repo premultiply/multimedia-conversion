@@ -15,6 +15,7 @@ class Converter {
 			$config = $registry->configuration;
 			$formats = $registry->formats;
 			$ffmpegPath = $config->path->ffmpeg;
+			$flvtool2Path = $config->path->flvtool2;
 			$destFile = $filename.'.'.$quality.'.'.$format;
 			if ($formats->{$format}->mediatype == 'video') {
 				$srcWidth = 0;
@@ -48,11 +49,11 @@ class Converter {
 					$frame = $convertedMovie->getFrame($frameNo);
 					imagejpeg($frame->toGDImage(), $filename.'.jpg');
 				}
-				/*if ($format == 'h264') {
+				if ($format == 'h264') {
 					$this->_makeStreamable($destFile);
-				}*/
+				}
 				if ($format == 'flv') {
-					exec('flvtool2 -UP "'. $destFile .'"');
+					exec($flvtool2Path . ' -UP "'. $destFile .'"');
 				}
 			} elseif ($formats->{$format}->mediatype == 'audio') {
 				exec($ffmpegPath . " -i \"" . $filename . '" ' . $formats->{$format}->{$quality}->pass->first->ffmpeg. ' "'. $destFile .'"');
@@ -208,13 +209,13 @@ class Converter {
 		return $xml;
 	}
 
-	/*private function _makeStreamable($filename) {
+	private function _makeStreamable($filename) {
 		$registry = Zend_Registry::getInstance();
 		$config = $registry->configuration;
-		exec('qtf "' . $filename . '" "' . $filename . '.qtf"');
-		echo('qtf "' . $filename . '" "' . $filename . '.qtf"');
-		//unlink($filename);
-		//rename($filename . '.qtf', $filename);
-	} */
+		$qtfPath = $config->path->qtf;
+		exec($qtfPath . ' "' . $filename . '" "' . $filename . '.qtf"');
+		unlink($filename);
+		rename($filename . '.qtf', $filename);
+	}
 	
 }
