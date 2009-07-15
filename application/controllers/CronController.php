@@ -14,12 +14,13 @@ class CronController extends Zend_Controller_Action {
 		$status = new Status();
 		
 		// usuwanie zadań zakończonych dalej niż X godzin temu (x określone w config.ini)
-		$jobs = $jobsTable->fetchAll(array(
+		$where = array(
 			'uploaded IS NOT NULL',
 			'deleted IS NULL',
 			'converted IS NOT NULL' ,
 			'conversion_started IS NOT NULL'
-		));
+		);
+		$jobs = $jobsTable->fetchAll($where, null, 3);
 		
 		foreach($jobs as $job) {
 			$time = time() - strtotime(preg_replace("/\..*/","",$job->converted));
