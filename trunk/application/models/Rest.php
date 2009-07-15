@@ -139,7 +139,7 @@ class Rest {
 		} elseif (file_exists($config->path->files.$jobId.'/'.$job->filename.'_remixed.jpg')) {
 			$filepath = $config->path->files.$jobId.'/'.$job->filename.'_remixed.jpg';
 		}
-		if ($job->converted && $job->uploaded && $formats->{$job->format}->thumb){
+		if ($job->converted && $job->uploaded && $formats->{$job->format}->thumbs){
 			http_send_content_disposition($job->filename.".jpg");
 			http_send_content_type("binary/octet-stream");	
 			http_throttle(0.1, $config->http->throttle);
