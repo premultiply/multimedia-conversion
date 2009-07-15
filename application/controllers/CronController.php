@@ -20,7 +20,7 @@ class CronController extends Zend_Controller_Action {
 			'converted IS NOT NULL' ,
 			'conversion_started IS NOT NULL'
 		);
-		$jobs = $jobsTable->fetchAll($where, null, 3);
+		$jobs = $jobsTable->fetchAll($where);
 		
 		foreach($jobs as $job) {
 			$time = time() - strtotime(preg_replace("/\..*/","",$job->converted));
@@ -35,12 +35,13 @@ class CronController extends Zend_Controller_Action {
 		
 		
 		// konwersja wszystkich wgranych i nieskonwertowanych plików
-		$jobs = $jobsTable->fetchAll(array(
+		$where = array(
 			'uploaded IS NOT NULL',
 			'deleted IS NULL',
 			'converted IS NULL' ,
 			'conversion_started IS NULL'
-		));
+		);
+		$jobs = $jobsTable->fetchAll($where, null, 1);
 		
 		foreach($jobs as $job) { // zaznaczenie rozpoczetych zadan aby w przypadku odpalenia tego kontrolera zanim poprzednia instancja zakonczyla prace te same zadania nie byly wykonywane wiecej niz jeden raz
 			$job->conversion_started = 'now';
