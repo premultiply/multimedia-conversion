@@ -13,6 +13,13 @@ class CronController extends Zend_Controller_Action {
 		$converter = new Converter();
 		$status = new Status();
 		
+		//sprawdzanie obciazenia systemu
+		$load = sys_getloadavg();
+		if ($load[0] > $config->load) {
+			header('HTTP/1.1 503 Too busy, try again later');
+			die('Server too busy. Please try again later.');
+		}
+		
 		// usuwanie zadań zakończonych dalej niż X godzin temu (x określone w config.ini)
 		$where = array(
 			'uploaded IS NOT NULL',
