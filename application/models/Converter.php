@@ -180,7 +180,7 @@ class Converter {
 					$property->addAttribute('in', round($start * 0.025));
 				}
 			}
-			if ($property->attributes()->len) {
+			if ($property->getName() != 'blank' && $property->attributes()->len) {
 				if ($property->attributes()->out) {
 					$property->attributes()->out = round(($property->attributes()->len + $start) * 0.025);
 				} else {
@@ -195,7 +195,15 @@ class Converter {
 					$property->addAttribute('out', round($stop * 0.025));
 				}
 			}
-			if ($property->attributes()-> name == "resource" && Zend_Uri::check($property)) {
+			if ($property->getName() == 'blank' && $property->attributes()->len) {
+				$len = $property->attributes()->len;
+				if ($property->attributes()->length) {
+					$property->attributes()->length = round($len * 0.025);
+				} else {
+					$property->addAttribute('length', round($len * 0.025));
+				}
+			}			
+			if ($property->attributes()->name == "resource" && Zend_Uri::check($property)) {
 				copy($property, $path."resource".$this->i);
 				$property[0] = "resource".$this->i;
 				$this->i = $this->i + 1;
