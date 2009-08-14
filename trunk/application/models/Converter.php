@@ -42,18 +42,18 @@ class Converter {
 				} else {
 					return 'Error: invalid format';
 				}
-				if ($formats->{$format}->thumbs) {
+				if ($formats->{$format}->thumbs && file_exists($destFile) && filesize($destFile) > 0) {
 					$convertedMovie = new ffmpeg_movie($destFile);
 					$frameNo = $this->_makeMultipleTwo($convertedMovie->getFrameCount()) / 2;
 					$frameNo = $frameNo > 0 ? $frameNo : 1;
 					$frame = $convertedMovie->getFrame($frameNo);
 					imagejpeg($frame->toGDImage(), $filename.'.jpg');
 				}
-				if ($format == 'h264') {
-					$this->_makeStreamable($destFile);
+				if ($formats->{$format}->qtf) {
+					$this->_makeStreamableWithQtf($filename . '.' . $quality . '.' . $format);
 				}
-				if ($format == 'flv') {
-					exec($flvtool2Path . ' -UP "'. $destFile .'"');
+				if ($formats->{$format}->flvtool2) {
+					$this->_makeStreamableWithFlvtool2($filename . '.' . $quality . '.' . $format);
 				}
 			} elseif ($formats->{$format}->mediatype == 'audio') {
 				exec($ffmpegPath . " -i \"" . $filename . '" ' . $formats->{$format}->{$quality}->pass->first->ffmpeg. ' "'. $destFile .'"');
@@ -130,23 +130,23 @@ class Converter {
 		elseif ($formats->{$format}->{$quality}->pass->first->mlt) {
 			exec('cd ' . $path . ' && ' . $inigoPath . ' "' . $filename . '.westley" -consumer avformat:"' . $filename . '.' . $quality . '.' . $format .'" ' . $formats->{$format}->{$quality}->pass->first->mlt);
 		}
-		if ($formats->{$format}->thumbs) {
+		if ($formats->{$format}->thumbs && file_exists($filename . '.' . $quality . '.' . $format) && filesize($filename . '.' . $quality . '.' . $format) > 0) {
 			$convertedMovie = new ffmpeg_movie($filename . '.' . $quality . '.' . $format);
 			$frameNo = $this->_makeMultipleTwo($convertedMovie->getFrameCount()) / 2;
 			$frameNo = $frameNo > 0 ? $frameNo : 1;
 			$frame = $convertedMovie->getFrame($frameNo);
 			imagejpeg($frame->toGDImage(), $filename.'.jpg');
 		}
-		if ($format == 'h264') {
-			$this->_makeStreamable($filename . '.' . $quality . '.' . $format);
+		if ($formats->{$format}->qtf) {
+			$this->_makeStreamableWithQtf($filename . '.' . $quality . '.' . $format);
 		}
-		if ($format == 'flv') {
-			exec($flvtool2Path . ' -UP "' . $filename . '.' . $quality . '.' . $format . '"');
+		if ($formats->{$format}->flvtool2) {
+			$this->_makeStreamableWithFlvtool2($filename . '.' . $quality . '.' . $format);
 		}
 		if (file_exists($filename . '.' . $quality . '.' . $format) && filesize($filename . '.' . $quality . '.' . $format) > 0)
 			return 'success';
 		else 
-			return 'Error: unable to convert this file 2';
+			return 'Error: unable to convert this file';
 	}
 	/*
 	private function _getParameters($filename) {
@@ -218,13 +218,20 @@ class Converter {
 		return $xml;
 	}
 
-	private function _makeStreamable($filename) {
+	private function _makeStreamableWithQtf($filename) {
 		$registry = Zend_Registry::getInstance();
 		$config = $registry->configuration;
 		$qtfPath = $config->path->qtf;
 		exec($qtfPath . ' "' . $filename . '" "' . $filename . '.qtf"');
 		unlink($filename);
 		rename($filename . '.qtf', $filename);
+	}
+	
+	private function _makeStreamableWithFlvtool2($filename) {
+		$registry = Zend_Registry::getInstance();
+		$config = $registry->configuration;
+		$flvtool2Path = $config->path->flvtool2;
+		exec($flvtool2Path . ' -UP "' . $filename . '"');
 	}
 	
 }
