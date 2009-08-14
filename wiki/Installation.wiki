@@ -12,7 +12,8 @@ In order MC to work properly you need working Linux/Unix server with PHP5 and Po
   * *ffmpeg-php php extension* - http://ffmpeg-php.sourceforge.net
   * *pecl_http php extension* - http://pecl.php.net/package/pecl_http
   * *GD php extension* - http://www.libgd.org/
-
+  * *qt-faststart* - http://multimedia.cx/eggs/improving-qt-faststart/
+  * *flvtool2* - http://inlet-media.de/flvtool2
 =Zend Framework files placement=
 
 Extract contents of "ZendFramework-<version.number>/library/" directory from your Zend Framework package into "library".
