@@ -7,11 +7,11 @@ Apart from simple conversion between various multimedia formats, MC offers advan
 
 =How does it work?=
 
-You have to upload Westley XML (in fact, our XML is a little different, please read next paragraph) file to MC just as regular audio or video file. You have to specify format and quality of output file and wait patiently.
+You have to upload MltXml (in fact, our XML is a little different, please read next paragraph) file to MC just as regular audio or video file. You have to specify format and quality of output file and wait patiently.
 
-For documentation of Westley format [http://www.mltframework.org/twiki/bin/view/MLT/Westley visit this site].
+For documentation of MltXml format [http://www.mltframework.org/twiki/bin/view/MLT/MltXml visit this site].
 
-=How our XML differs from original Westley format?=
+=How our XML differs from original MltXml format?=
 
 Firstly, each time you specify a resource in XML:
 
@@ -27,9 +27,11 @@ So it should be like that:
 <property name="resource">http://www.myserver.com/clip1.dv</property>
 }}}
 
-Secondly, apart from "in" and "out" attributes, which are numbers of frames, you can specify "start" and "len" (length) in miliseconds. This feature is implemented to make it easier for Flash applications to work with MC. If "in" and "out" attributes are specified simultaneously they are ignored. 
+Secondly, apart from "in" and "out" attributes, which are numbers of frames, you can specify "start" and "len" (length) in milliseconds. This feature is implemented to make it easier for Flash applications to work with MC. If "in" and "out" attributes are specified simultaneously they are ignored. 
 
-Finally, as you probably know if you're familiar with MLT, Westley files can be used as producers, so it would be easy to make Westley file that specifies itself as a resource and puts MC into infinite loop. To prevent that the proper limitation is set in _/application/config/config.ini_
+Thirdly, you shouldn't use "source_fps" property in xml-s sent to MC if you're specifying timestamps in milliseconds.
+
+Finally, as you probably know if you're familiar with MLT, MltXml files can be used as producers, so it would be easy to make MltXml file that specifies itself as a resource and puts MC into infinite loop. To prevent that the proper limitation is set in _/application/config/config.ini_
 
 {{{
 xml.depth = 5
