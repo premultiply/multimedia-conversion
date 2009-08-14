@@ -79,6 +79,7 @@ flv.normal.width = 320
 flv.extension = flv
 flv.mediatype = video
 flv.thumbs = true
+flv.flvtool2 = true
 }}}
 
 As you can see, some options are specified this way:
@@ -137,6 +138,12 @@ flv.thumbs = true
 
 This option decides whether thumbnails of output files will be available or not. *Change it to "false" if you'll experience any problems with thumbnails in your format. It doesn't need to be set when mediatype is "audio".
 
+{{{
+flv.flvtool2 = true
+}}}
+
+If *flvtool2* is set true, MC treats output files with flvtool2, which is important when you want to stream your flv files. Has no use with formats other than flv.
+
 ==More complex, 2-pass h264 video encoding _formats.ini_ entry:==
 
 {{{
@@ -148,4 +155,11 @@ h264.normal.width = 640
 h264.extension = mp4
 h264.mediatype = video
 h264.thumbs = false
+h264.qtf = true
 }}}
+
+{{{
+h264.qtf = true
+}}}
+
+Decides whether to use *qt-faststart* on output files. Similar to *flvtool2*, but for h264 files.
