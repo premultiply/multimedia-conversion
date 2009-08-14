@@ -73,6 +73,9 @@ xml.depth - see AdvancedUsage for informations about this option
 path.ffmpeg = <path to ffmpeg (/usr/bin/ffmpeg in my case)>
 path.files = <path to directory where MC will keep its workfiles>
 path.null = <path to null device (/dev/null in my case)
+path.flvtool2 = <path to flvtool2 (/usr/bin/flvtool2 in my case)>
+path.qtf = <path to qt-faststart (/usr/local/bin/qtf in my case)>
+path.inigo = <path to inigo/melt (/usr/local/bin/melt)>
 
 }}}
 
