@@ -5,8 +5,14 @@
  */
 class Status {
 	public function respond($url, $content) {
-		$client = new Zend_Http_Client($url);
-		$client->setParameterPost('status', $content);
-		$client->request('POST');
+		try{
+			$client = new Zend_Http_Client($url);
+			$client->setParameterPost('status', $content);
+			$valid = Zend_Uri::check($url);
+			$client->request('POST');
+		} catch (Zend_Http_Exception $e) {
+			echo "Caught exception: " . get_class($e) . "\n";
+    		echo "Message: " . $e->getMessage() . "\n";
+		}
 	}
 }
