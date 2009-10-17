@@ -9,8 +9,17 @@ set_include_path(
     get_include_path()
 );
 
-require_once "Zend/Loader.php";
-Zend_Loader::registerAutoload();
+/*require_once "Zend/Loader.php";
+Zend_Loader::registerAutoload();*/
+
+require_once 'Zend/Loader/Autoloader.php';
+$loader = Zend_Loader_Autoloader::getInstance();
+$loader->registerNamespace('App_');
+
+
+$loader->setFallbackAutoloader(true);
+
+$loader->suppressNotFoundWarnings(false);
 
 try {
     require '../application/bootstrap.php';
