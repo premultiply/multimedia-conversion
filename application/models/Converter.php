@@ -24,6 +24,7 @@ class Converter {
 				if ($ffmpegObj) {
 					$srcWidth = $this->_makeMultipleTwo($ffmpegObj->getFrameWidth());
 					$srcHeight = $this->_makeMultipleTwo($ffmpegObj->getFrameHeight());
+					unset($ffmpegObj);
 				}
 				if ($srcWidth == 0 || $srcHeight == 0) {
 					return 'Error: invalid resource';
@@ -48,6 +49,7 @@ class Converter {
 					$frameNo = $frameNo > 0 ? $frameNo : 1;
 					$frame = $convertedMovie->getFrame($frameNo);
 					imagejpeg($frame->toGDImage(), $filename.'.jpg');
+					unset($convertedMovie);
 				}
 				if ($formats->{$format}->qtf) {
 					$this->_makeStreamableWithQtf($filename . '.' . $quality . '.' . $format);
@@ -136,6 +138,7 @@ class Converter {
 			$frameNo = $frameNo > 0 ? $frameNo : 1;
 			$frame = $convertedMovie->getFrame($frameNo);
 			imagejpeg($frame->toGDImage(), $filename.'.jpg');
+			unset($convertedMovie);
 		}
 		if ($formats->{$format}->qtf) {
 			$this->_makeStreamableWithQtf($filename . '.' . $quality . '.' . $format);
