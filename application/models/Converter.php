@@ -25,6 +25,7 @@ class Converter {
 					$srcWidth = $this->_makeMultipleTwo($ffmpegObj->getFrameWidth());
 					$srcHeight = $this->_makeMultipleTwo($ffmpegObj->getFrameHeight());
 					unset($ffmpegObj);
+					$fps = $ffmpegObj->getFrameRate();
 				}
 				if ($srcWidth == 0 || $srcHeight == 0) {
 					return 'Error: invalid resource';
@@ -35,7 +36,6 @@ class Converter {
 				} else {
 					$height = $formats->{$format}->{$quality}->height;
 				}
-				$fps = $ffmpegObj->getFrameRate();
 				if ($formats->{$format}->{$quality}->pass->first->ffmpeg && $formats->{$format}->{$quality}->pass->second->ffmpeg) {
 					exec('cd ' . dirname($filename) . ' && ' . $ffmpegPath . ' -i "' . $filename . '" ' . $formats->{$format}->{$quality}->pass->first->ffmpeg.' -r '.$fps." -s ".$width . 'x' . $height . " -y ". $config->path->null . ' && ' . $ffmpegPath . ' -i "' . $filename . '" ' . $formats->{$format}->{$quality}->pass->second->ffmpeg.' -r '.$fps.' -s '.$width . 'x' . $height . ' "'. $destFile .'"');
 				} elseif ($formats->{$format}->{$quality}->pass->first->ffmpeg) {
