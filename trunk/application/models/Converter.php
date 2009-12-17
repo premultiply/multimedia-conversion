@@ -24,8 +24,8 @@ class Converter {
 				if ($ffmpegObj) {
 					$srcWidth = $this->_makeMultipleTwo($ffmpegObj->getFrameWidth());
 					$srcHeight = $this->_makeMultipleTwo($ffmpegObj->getFrameHeight());
-					unset($ffmpegObj);
 					$fps = $ffmpegObj->getFrameRate();
+					unset($ffmpegObj);
 				}
 				if ($srcWidth == 0 || $srcHeight == 0) {
 					return 'Error: invalid resource';
