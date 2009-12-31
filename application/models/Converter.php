@@ -20,7 +20,7 @@ class Converter {
 			if ($formats->{$format}->mediatype == 'video') {
 				$srcWidth = 0;
 				$srcHeight = 0;
-				$ffmpegObj = @new ffmpeg_movie($filename);  // zabezpieczenie przed zlymi plikami
+				$ffmpegObj = @new Movie($filename);  // zabezpieczenie przed zlymi plikami
 				if ($ffmpegObj) {
 					$srcWidth = $this->_makeMultipleTwo($ffmpegObj->getFrameWidth());
 					$srcHeight = $this->_makeMultipleTwo($ffmpegObj->getFrameHeight());
@@ -44,11 +44,10 @@ class Converter {
 					return 'Error: invalid format';
 				}
 				if ($formats->{$format}->thumbs && file_exists($destFile) && filesize($destFile) > 0) {
-					$convertedMovie = new ffmpeg_movie($destFile);
-					$frameNo = $this->_makeMultipleTwo($convertedMovie->getFrameCount()) / 2;
+					$convertedMovie = new Movie($destFile);
+					$frameNo = $this->_makeMultipleTwo($convertedMovie->getFrameRate * $convertedMovie->getDuration) / 2;
 					$frameNo = $frameNo > 0 ? $frameNo : 1;
-					$frame = $convertedMovie->getFrame($frameNo);
-					imagejpeg($frame->toGDImage(), $filename.'.jpg');
+					$convertedMovie->saveFrame($frameNo, $filename.'.jpg');
 					unset($convertedMovie);
 				}
 				if ($formats->{$format}->qtf) {
@@ -133,11 +132,10 @@ class Converter {
 			exec('cd ' . $path . ' && ' . $inigoPath . ' "' . $filename . '.westley" -consumer avformat:"' . $filename . '.' . $quality . '.' . $format .'" ' . $formats->{$format}->{$quality}->pass->first->mlt);
 		}
 		if ($formats->{$format}->thumbs && file_exists($filename . '.' . $quality . '.' . $format) && filesize($filename . '.' . $quality . '.' . $format) > 0) {
-			$convertedMovie = new ffmpeg_movie($filename . '.' . $quality . '.' . $format);
+			$convertedMovie = new M($filename . '.' . $quality . '.' . $format);
 			$frameNo = $this->_makeMultipleTwo($convertedMovie->getFrameCount()) / 2;
 			$frameNo = $frameNo > 0 ? $frameNo : 1;
-			$frame = $convertedMovie->getFrame($frameNo);
-			imagejpeg($frame->toGDImage(), $filename.'.jpg');
+			$convertedMovie->getFrame($frameNo, $filename.'.jpg');
 			unset($convertedMovie);
 		}
 		if ($formats->{$format}->qtf) {
@@ -161,7 +159,7 @@ class Converter {
 		if($value % 2 == 0) {
 			return $value;
 		} else {
-			return ($value-1);
+			return ($value - 1);
 		}
 	}
 	
