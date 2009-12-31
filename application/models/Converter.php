@@ -132,10 +132,10 @@ class Converter {
 			exec('cd ' . $path . ' && ' . $inigoPath . ' "' . $filename . '.westley" -consumer avformat:"' . $filename . '.' . $quality . '.' . $format .'" ' . $formats->{$format}->{$quality}->pass->first->mlt);
 		}
 		if ($formats->{$format}->thumbs && file_exists($filename . '.' . $quality . '.' . $format) && filesize($filename . '.' . $quality . '.' . $format) > 0) {
-			$convertedMovie = new M($filename . '.' . $quality . '.' . $format);
+			$convertedMovie = new Movie($filename . '.' . $quality . '.' . $format);
 			$frameNo = $this->_makeMultipleTwo($convertedMovie->getFrameCount()) / 2;
 			$frameNo = $frameNo > 0 ? $frameNo : 1;
-			$convertedMovie->getFrame($frameNo, $filename.'.jpg');
+			$convertedMovie->saveFrame($frameNo, $filename.'.jpg');
 			unset($convertedMovie);
 		}
 		if ($formats->{$format}->qtf) {
