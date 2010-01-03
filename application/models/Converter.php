@@ -20,7 +20,7 @@ class Converter {
 			if ($formats->{$format}->mediatype == 'video') {
 				$srcWidth = 0;
 				$srcHeight = 0;
-				$ffmpegObj = @new Movie($filename);  // zabezpieczenie przed zlymi plikami
+				$ffmpegObj = new Movie($filename);
 				if ($ffmpegObj) {
 					$srcWidth = $this->_makeMultipleTwo($ffmpegObj->getFrameWidth());
 					$srcHeight = $this->_makeMultipleTwo($ffmpegObj->getFrameHeight());
@@ -28,7 +28,7 @@ class Converter {
 					unset($ffmpegObj);
 				}
 				if ($srcWidth == 0 || $srcHeight == 0) {
-					return 'Error: invalid resource';
+					throw new Exception('Error: invalid resource');
 				}
 				$width = $this->_makeMultipleTwo($formats->{$format}->{$quality}->width);
 				if (empty($formats->{$format}->{$quality}->height)) {
@@ -41,7 +41,7 @@ class Converter {
 				} elseif ($formats->{$format}->{$quality}->pass->first->ffmpeg) {
 					exec($ffmpegPath . ' -i "' . $filename . '" ' . $formats->{$format}->{$quality}->pass->first->ffmpeg.' -r '.$fps.' -s '.$width . 'x' . $height . ' "'. $destFile .'"');
 				} else {
-					return 'Error: invalid format';
+					throw new Exception('Error: invalid format');
 				}
 				if ($formats->{$format}->thumbs && file_exists($destFile) && filesize($destFile) > 0) {
 					$convertedMovie = new Movie($destFile);
@@ -59,15 +59,15 @@ class Converter {
 			} elseif ($formats->{$format}->mediatype == 'audio') {
 				exec($ffmpegPath . " -i \"" . $filename . '" ' . $formats->{$format}->{$quality}->pass->first->ffmpeg. ' "'. $destFile .'"');
 			} else {
-				return 'Error: invalid mediatype';
+				throw new Exception('Error: invalid mediatype');
 			}
 			if (file_exists($destFile) && filesize($destFile) > 0) {
 				return 'success';
 			} else {
-				return 'Error: unable to convert this file';
+				throw new Exception('Error: unable to convert this file');
 			}
 		} else {
-			return 'Error: file does not exist in filesystem.';
+			throw new Exception('Error: file does not exist in filesystem.');
 		}
 	}
 	
@@ -147,7 +147,7 @@ class Converter {
 		if (file_exists($filename . '.' . $quality . '.' . $format) && filesize($filename . '.' . $quality . '.' . $format) > 0)
 			return 'success';
 		else 
-			return 'Error: unable to convert this file';
+			throw new Exception('Error: unable to convert this file');
 	}
 	/*
 	private function _getParameters($filename) {
@@ -156,11 +156,14 @@ class Converter {
 	*/
 	//zamiana liczby na parzysta (potrzebne dla ffmpeg)
 	private function _makeMultipleTwo($value) {
-		if($value % 2 == 0) {
-			return $value;
-		} else {
-			return ($value - 1);
-		}
+		if(is_numeric($value)) {
+			if($value % 2 == 0) {
+				return $value;
+			} else {
+				return ($value - 1);
+			}
+		} else
+			throw new Exception('Error: Given value is not numeric');
 	}
 	
 	/*
