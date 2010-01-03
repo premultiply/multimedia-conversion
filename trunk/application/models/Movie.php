@@ -37,7 +37,6 @@ class Movie {
 		preg_match($regexp, $output, $this->info);
 		$empty = true;
 		echo '<pre>';
-		echo $output . "\n";
 		var_dump($this->info);
 		echo '</pre>';
 		foreach ($this->info as $line) if($line) $empty = false;
