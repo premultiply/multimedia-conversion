@@ -7,6 +7,7 @@
 class CronController extends Zend_Controller_Action {
 	
 	public function indexAction(){
+		//echo shell_exec('ls -la');
 		// potrzebne zmienne
 		$config = Zend_Registry::getInstance()->configuration;
 		$jobsTable = new Jobs();
@@ -60,10 +61,14 @@ class CronController extends Zend_Controller_Action {
 		foreach($jobs as $job) {
 			$filename = $config->path->files.$job->id . '/' . $job->filename;
 			@$xml = simplexml_load_file($filename);
-			if (is_object($xml)) {
-				$result = $converter->remix($xml, $filename, $job->format, $job->quality);
-			} else {
-				$result = $converter->convert($filename, $job->format, $job->quality);
+			try {
+				if (is_object($xml)) {
+					$result = $converter->remix($xml, $filename, $job->format, $job->quality);
+				} else {
+					$result = $converter->convert($filename, $job->format, $job->quality);
+				}
+			} catch (Exception $e) {
+				$result = $e->getMessage();
 			}
 			if ($result == 'success'){
 				$job->converted = 'now';
@@ -72,7 +77,7 @@ class CronController extends Zend_Controller_Action {
 					$status->respond($job->status_url, 'OK');
 				}
 			} else {
-				$this->_delete($config->path->files.$job->id);
+				//$this->_delete($config->path->files.$job->id);
 				$job->deleted = 'now';
 				$job->deletion_reason = $result;
 				$job->save();
@@ -80,6 +85,7 @@ class CronController extends Zend_Controller_Action {
 					$status->respond($job->status_url, $result);
 				}
 			}	
+			echo $result . "\n";
 		}
 	}
 	
