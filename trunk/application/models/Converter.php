@@ -40,7 +40,7 @@ class Converter {
 				if ($formats->{$format}->{$quality}->pass->first->ffmpeg && $formats->{$format}->{$quality}->pass->second->ffmpeg) {
 					exec('cd ' . dirname($filename) . ' && ' . $ffmpegPath . ' -i "' . $filename . '" ' . $formats->{$format}->{$quality}->pass->first->ffmpeg.' -r '.$fps." -s ".$width . 'x' . $height . " -y ". $config->path->null . ' && ' . $ffmpegPath . ' -i "' . $filename . '" ' . $formats->{$format}->{$quality}->pass->second->ffmpeg.' -r '.$fps.' -s '.$width . 'x' . $height . ' "'. $destFile .'"');
 				} elseif ($formats->{$format}->{$quality}->pass->first->ffmpeg) {
-					echo($ffmpegPath . ' -i "' . $filename . '" ' . $formats->{$format}->{$quality}->pass->first->ffmpeg.' -r '.$fps.' -s '.$width . 'x' . $height . ' "'. $destFile .'"');
+					exec($ffmpegPath . ' -i "' . $filename . '" ' . $formats->{$format}->{$quality}->pass->first->ffmpeg.' -r '.$fps.' -s '.$width . 'x' . $height . ' "'. $destFile .'"');
 				} else {
 					throw new Exception('Error: invalid format');
 				}
