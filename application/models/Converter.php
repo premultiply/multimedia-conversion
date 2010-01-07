@@ -5,9 +5,9 @@
  */
 
 class Converter {
-	
+
 	private $i, $d = 0;
-	
+
 	// funkcja konwertujaca dany plik do danego formatu w danej jakosci
 	public function convert($filename, $format, $quality) {
 		if (file_exists($filename)) {
@@ -20,7 +20,8 @@ class Converter {
 			if ($formats->{$format}->mediatype == 'video') {
 				$srcWidth = 0;
 				$srcHeight = 0;
-				$ffmpegObj = new Movie($filename);
+				if($config->ffmpeg-php) ffmpeg_movie($filename);
+				else $ffmpegObj = new Movie($filename);
 				if ($ffmpegObj) {
 					$srcWidth = $this->_makeMultipleTwo($ffmpegObj->getFrameWidth());
 					$srcHeight = $this->_makeMultipleTwo($ffmpegObj->getFrameHeight());
@@ -39,15 +40,23 @@ class Converter {
 				if ($formats->{$format}->{$quality}->pass->first->ffmpeg && $formats->{$format}->{$quality}->pass->second->ffmpeg) {
 					exec('cd ' . dirname($filename) . ' && ' . $ffmpegPath . ' -i "' . $filename . '" ' . $formats->{$format}->{$quality}->pass->first->ffmpeg.' -r '.$fps." -s ".$width . 'x' . $height . " -y ". $config->path->null . ' && ' . $ffmpegPath . ' -i "' . $filename . '" ' . $formats->{$format}->{$quality}->pass->second->ffmpeg.' -r '.$fps.' -s '.$width . 'x' . $height . ' "'. $destFile .'"');
 				} elseif ($formats->{$format}->{$quality}->pass->first->ffmpeg) {
-					exec($ffmpegPath . ' -i "' . $filename . '" ' . $formats->{$format}->{$quality}->pass->first->ffmpeg.' -r '.$fps.' -s '.$width . 'x' . $height . ' "'. $destFile .'"');
+					echo($ffmpegPath . ' -i "' . $filename . '" ' . $formats->{$format}->{$quality}->pass->first->ffmpeg.' -r '.$fps.' -s '.$width . 'x' . $height . ' "'. $destFile .'"');
 				} else {
 					throw new Exception('Error: invalid format');
 				}
 				if ($formats->{$format}->thumbs && file_exists($destFile) && filesize($destFile) > 0) {
-					$convertedMovie = new Movie($destFile);
-					$frameNo = $this->_makeMultipleTwo($convertedMovie->getFrameRate * $convertedMovie->getDuration) / 2;
-					$frameNo = $frameNo > 0 ? $frameNo : 1;
-					$convertedMovie->saveFrame($frameNo, $filename.'.jpg');
+					if($config->ffmpeg-php) {
+						$convertedMovie = new ffmpeg_movie($destFile);
+						$frameNo = $this->_makeMultipleTwo($convertedMovie->getFrameCount()) / 2;
+						$frameNo = $frameNo > 0 ? $frameNo : 1;
+						$frame = $convertedMovie->getFrame($frameNo);
+						imagejpeg($frame->toGDImage(), $filename.'.jpg');
+					} else {
+						$convertedMovie = new Movie($destFile);
+						$time = $this->_makeMultipleTwo($convertedMovie->getDuration()) / 2;
+						$time = $time > 0 ? $time : 1;
+						$convertedMovie->saveFrame($time, $filename.'.jpg');
+					}
 					unset($convertedMovie);
 				}
 				if ($formats->{$format}->qtf) {
@@ -70,47 +79,47 @@ class Converter {
 			throw new Exception('Error: file does not exist in filesystem.');
 		}
 	}
-	
+
 	/*public function remix_old($xml, $filename, $format, $quality) {
 		if (is_object($xml->movie[0]->attributes())) {
-			$i = 0;
-			$path = dirname($filename) . '/';
-			foreach ($xml->movie as $movie) {
-				if (isset($movie->attributes()->url)) {
-					$file_temp = 'temp' . $i;
-					copy($movie->attributes()->url, $path.$file_temp);
-					$time = '';
-					$start = 0;
-					if (isset($movie->attributes()->start)) {
-						$start = $movie->attributes()->start;
-						$time .= ' -ss ' . $start;
-						
-					}
-					if (isset($movie->attributes()->end)) {
-						$end = $movie->attributes()->end - $start;
-						$time .= ' -t ' . $end;
-					}
-					exec('ffmpeg -i "' . $path . $file_temp . '"' . $time .' -sameq -y "' . $path . $file_temp . '.mpg"');
-					if ($i == 0) {
-						rename($path . 'temp' . $i . '.mpg', $path . basename($filename) . "_remixed");
-					} else {
-						copy($path . basename($filename) . '_remixed', $path . 'temp_remixed');
-						exec('cat "' . $path . 'temp_remixed" "' . $path . 'temp' . $i . '.mpg" > "' .$path . basename($filename) . '_remixed"');
-						unlink($path . 'temp_remixed');
-					}
-					$i++;
-				}
-			}
-			$result = $this->convert($path . basename($filename) . "_remixed", $format, $quality);
-			return $result;
-		} else {
-			return 'Error: invalid XML';
+		$i = 0;
+		$path = dirname($filename) . '/';
+		foreach ($xml->movie as $movie) {
+		if (isset($movie->attributes()->url)) {
+		$file_temp = 'temp' . $i;
+		copy($movie->attributes()->url, $path.$file_temp);
+		$time = '';
+		$start = 0;
+		if (isset($movie->attributes()->start)) {
+		$start = $movie->attributes()->start;
+		$time .= ' -ss ' . $start;
+
 		}
-	}*/
-	
+		if (isset($movie->attributes()->end)) {
+		$end = $movie->attributes()->end - $start;
+		$time .= ' -t ' . $end;
+		}
+		exec('ffmpeg -i "' . $path . $file_temp . '"' . $time .' -sameq -y "' . $path . $file_temp . '.mpg"');
+		if ($i == 0) {
+		rename($path . 'temp' . $i . '.mpg', $path . basename($filename) . "_remixed");
+		} else {
+		copy($path . basename($filename) . '_remixed', $path . 'temp_remixed');
+		exec('cat "' . $path . 'temp_remixed" "' . $path . 'temp' . $i . '.mpg" > "' .$path . basename($filename) . '_remixed"');
+		unlink($path . 'temp_remixed');
+		}
+		$i++;
+		}
+		}
+		$result = $this->convert($path . basename($filename) . "_remixed", $format, $quality);
+		return $result;
+		} else {
+		return 'Error: invalid XML';
+		}
+		}*/
+
 	/*
 	 * ta funkcja zajmuje sie xmlami wrzuconymi do mc
-	 * 
+	 *
 	 * INEGRACJA Z MLT
 	 */
 	public function remix($xml, $filename, $format, $quality) {
@@ -122,8 +131,8 @@ class Converter {
 		$flvtool2Path = $config->path->flvtool2;
 		$xml = $this->_convertXML($xml, $path, $config->xml->depth);
 		/*echo "<pre>";
-		print_r($xml);			//przydatne przy rozwiazywaniu problemow
-		echo "</pre>";*/
+		 print_r($xml);			//przydatne przy rozwiazywaniu problemow
+		 echo "</pre>";*/
 		file_put_contents($filename . '.westley', $xml->asXML());
 		if ($formats->{$format}->{$quality}->pass->second->mlt) {
 			exec('cd ' . $path . ' && ' . $inigoPath . ' "' . $filename . '.westley" -consumer avformat:"' . $filename . '.' . $quality . '.' . $format .'" ' . $formats->{$format}->{$quality}->pass->first->mlt . ' && ' . $inigoPath . ' "' . $filename . '.westley" -consumer avformat:"' . $filename . '.' . $quality . '.' . $format .'" ' . $formats->{$format}->{$quality}->pass->second->mlt);
@@ -132,10 +141,18 @@ class Converter {
 			exec('cd ' . $path . ' && ' . $inigoPath . ' "' . $filename . '.westley" -consumer avformat:"' . $filename . '.' . $quality . '.' . $format .'" ' . $formats->{$format}->{$quality}->pass->first->mlt);
 		}
 		if ($formats->{$format}->thumbs && file_exists($filename . '.' . $quality . '.' . $format) && filesize($filename . '.' . $quality . '.' . $format) > 0) {
-			$convertedMovie = new Movie($filename . '.' . $quality . '.' . $format);
-			$frameNo = $this->_makeMultipleTwo($convertedMovie->getFrameCount()) / 2;
-			$frameNo = $frameNo > 0 ? $frameNo : 1;
-			$convertedMovie->saveFrame($frameNo, $filename.'.jpg');
+			if($config->ffmpeg-php) {
+				$convertedMovie = new ffmpeg_movie($destFile);
+				$frameNo = $this->_makeMultipleTwo($convertedMovie->getFrameCount()) / 2;
+				$frameNo = $frameNo > 0 ? $frameNo : 1;
+				$frame = $convertedMovie->getFrame($frameNo);
+				imagejpeg($frame->toGDImage(), $filename.'.jpg');
+			} else {
+				$convertedMovie = new Movie($filename . '.' . $quality . '.' . $format);
+				$time = $this->_makeMultipleTwo($convertedMovie->getFrameCount()) / 2;
+				$time = $time > 0 ? $time : 1;
+				$convertedMovie->saveFrame($time, $filename.'.jpg');
+			}
 			unset($convertedMovie);
 		}
 		if ($formats->{$format}->qtf) {
@@ -145,15 +162,15 @@ class Converter {
 			$this->_makeStreamableWithFlvtool2($filename . '.' . $quality . '.' . $format);
 		}
 		if (file_exists($filename . '.' . $quality . '.' . $format) && filesize($filename . '.' . $quality . '.' . $format) > 0)
-			return 'success';
-		else 
-			throw new Exception('Error: unable to convert this file');
+		return 'success';
+		else
+		throw new Exception('Error: unable to convert this file');
 	}
 	/*
-	private function _getParameters($filename) {
-		
-	}
-	*/
+	 private function _getParameters($filename) {
+
+	 }
+	 */
 	//zamiana liczby na parzysta (potrzebne dla ffmpeg)
 	private function _makeMultipleTwo($value) {
 		if(is_numeric($value)) {
@@ -163,9 +180,9 @@ class Converter {
 				return ($value - 1);
 			}
 		} else
-			throw new Exception('Error: Given value is not numeric');
+		throw new Exception('Error: Given value is not numeric');
 	}
-	
+
 	/*
 	 *	bardzo sprytna funkcja zajmujaca sie plikami .westley
 	 *
@@ -206,16 +223,16 @@ class Converter {
 				} else {
 					$property->addAttribute('length', round($len * 0.025));
 				}
-			}			
+			}
 			if ($property->attributes()->name == "resource" && Zend_Uri::check($property)) {
 				copy($property, $path."resource".$this->i);
 				$property[0] = "resource".$this->i;
 				$this->i = $this->i + 1;
 				$xmlTemp = @simplexml_load_file($path.$property[0]);
 				if (is_object($xmlTemp) && $depth < $maxDepth) $this->_convertXML($xmlTemp, $path, $maxDepth, $depth + 1);
-			} 
-			if($property->children()){ 
-				$property = $this->_convertXML($property, $path, $maxDepth, $depth);	
+			}
+			if($property->children()){
+				$property = $this->_convertXML($property, $path, $maxDepth, $depth);
 			}
 		}
 		$this->d = $this->d - 1;
@@ -230,12 +247,11 @@ class Converter {
 		unlink($filename);
 		rename($filename . '.qtf', $filename);
 	}
-	
+
 	private function _makeStreamableWithFlvtool2($filename) {
 		$registry = Zend_Registry::getInstance();
 		$config = $registry->configuration;
 		$flvtool2Path = $config->path->flvtool2;
 		exec($flvtool2Path . ' -UP "' . $filename . '"');
 	}
-	
 }
