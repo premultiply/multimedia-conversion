@@ -77,7 +77,7 @@ class CronController extends Zend_Controller_Action {
 					$status->respond($job->status_url, 'OK');
 				}
 			} else {
-				//$this->_delete($config->path->files.$job->id);
+				$this->_delete($config->path->files.$job->id);
 				$job->deleted = 'now';
 				$job->deletion_reason = $result;
 				$job->save();
