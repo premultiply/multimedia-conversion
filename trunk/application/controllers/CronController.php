@@ -49,7 +49,7 @@ class CronController extends Zend_Controller_Action {
 			'converted IS NULL' ,
 			'conversion_started IS NULL'
 		);
-		$jobs = $jobsTable->fetchAll($where, null, 1);
+		$jobs = $jobsTable->fetchAll($where);//, null, 1);
 		
 		foreach($jobs as $job) { // zaznaczenie rozpoczetych zadan aby w przypadku odpalenia tego kontrolera zanim poprzednia instancja zakonczyla prace te same zadania nie byly wykonywane wiecej niz jeden raz
 			$job->conversion_started = 'now';
